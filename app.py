@@ -108,6 +108,8 @@ hormone_list.sort()
 app = Flask(__name__)
 app.secret_key = '$#ghFkGH56-1aRGFGHGtrfJH'
 app.config["SESSION_PERMANENT"] = False
+# Example to set MAX_CONTENT_LENGTH in Flask
+app.config['MAX_CONTENT_LENGTH'] = 512 * 1024 * 1024  # for 16MB limit
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)  # Session timeout of 1 hour
 session_id = ''
@@ -283,7 +285,7 @@ def run_sample():
 # Tool v2.0 (beta)
 @app.route('/example_run/<uniqueID>', methods=['GET'])
 def example_run(uniqueID):
-    print("In side")
+    #print("In side")
     conn = sqlite3.connect('results.db')
     c = conn.cursor()
 
@@ -513,8 +515,8 @@ def get_centrality():
 
         tissues = json.loads(request.form.get('tissues'))
 
-        print("Emergency")
-        print(tissues)
+        #print("Emergency")
+        #print(tissues)
         # tissues = sorted(tissues, key=lambda t: t['name'])
                 # Store the tissue names with unique IDs and expiration times
 
@@ -554,45 +556,45 @@ def get_centrality():
             send_email(email, 'Multicens', message)
 
         result = pd.DataFrame()
-        print(1)        
+        #print(1)        
         try:
             folder_path = os.path.join('static/sampleData', uniqueID)
             os.makedirs(folder_path, exist_ok=True)
             files = request.files.getlist('files')
             for file in files:
-                print(2)
+                #print(2)
                 if file and allowed_file(file.filename):
-                    print("2a")
+                    #print("2a")
                     filename = secure_filename(file.filename)
                     file_path = os.path.join(folder_path, filename)
                     file.save(file_path)
-            print("3")        
+            #print("3")        
             for tissue in tissues:
-                print("3b")
+                #print("3b")
                 if tissue['dataset'] == 'GTex' :
-                    print("3aa")
+                    #print("3aa")
                     tissue_name = tissue_names[tissue['name'].lower()]
                     tissue['exp'] = os.path.join(gtex_path, f'{tissue_name}.v8.normalized_expression.bed.gz')
                     tissue['cov'] = os.path.join(gtex_cov_path,f'{tissue_name}.v8.covariates.txt')
                 elif tissue['dataset'] == 'MSBB' :
-                    print("3ab")
+                    #print("3ab")
                     tissue_name = tissue_names[tissue['name'].lower()]
-                    print(tissue_name)
+                    #print(tissue_name)
                     tissue['exp'] = os.path.join(msbb_path, f'{tissue_name}.bed.gz')
-                    print("GK")
+                    #print("GK")
                 else:
-                    print("3ab")
+                    #print("3ab")
                     tissue['exp'] = os.path.join(folder_path, tissue['file'])
-            print("You")
-            print(tissues)
+            #print("You")
+            #print(tissues)
             A, gene_count = create_corr_matrix(uniqueID, tissues)
-            print("Hii")
-            print(A)
-            print("got")
+            #print("Hii")
+            #print(A)
+            #print("got")
             n = len(A)/len(tissues)
-            print("4")
+            #print("4")
             if measure == 'query':
-                print("4a")              
+                #print("4a")              
                 query_tissue = request.form.get('query-tissue')
                 query_file = request.files.get('query-file')
                 query_index = int(request.form.get('tissue-index'))                
@@ -606,17 +608,17 @@ def get_centrality():
                 _, g = right_target_global_centrality_t(A.values, num_layers=len(tissues), target_tissue = query_index, target_gene_indices = genes_indices, start=s, end=e, p=0.9)
                 result['Centrality'] = g
             elif measure == 'global':
-                print("4b")
+                #print("4b")
                 result['Centrality'] = global_centrality(A.values, len(tissues), p=0.9)
             else:
-                print("4c")               
+                #print("4c")               
                 result['Centrality'] = local_centrality(A.values, len(tissues), p=0.9)
             name_list = [[tissues[i]['name'] for _ in range(gene_count[i])] for i in range(len(tissues))]
             result['Tissue Name'] =  list(itertools.chain(*name_list))
             result['Gene Name'] = [re.sub(r'\.\d+$', '', s) for s in A.columns]
-            print("5")
+            #print("5")
             if measure == 'local':
-                print("5a")
+                #print("5a")
                 ranking = pd.DataFrame()
                 for tissue in tissues:
                     df = result.loc[result['Tissue Name']==tissue['name']]
@@ -625,11 +627,11 @@ def get_centrality():
                     ranking = pd.concat([ranking, df], ignore_index=True)
                 result = ranking
             else:
-                print("5b")
+                #print("5b")
                 result = result.sort_values(by='Centrality', ascending=False)
                 result['Rank'] = [i+1 for i in range(len(result))]
             result = result[['Tissue Name', 'Gene Name', 'Centrality', 'Rank']]
-            print("5c")
+            #print("5c")
         except Exception as e:
             return jsonify({"error": str(e)}), 500
         
@@ -644,7 +646,7 @@ def get_centrality():
         # time_taken = f'{execution_time} {unit}'
         time_taken = f'{execution_time} min(s)'
         print("Execution time:", time_taken, "\n")
-        print(result_csv)
+        #print(result_csv)
 
         update_result_in_db(uniqueID, result, time_taken, result_csv)
         

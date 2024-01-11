@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="60"> <!-- This line will refresh the page every 60 seconds -->
+    <title>Result Calculating</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Optional: Adds a basic font styling */
+            margin: 0;
+            height: 100vh; /* Makes sure the body covers the entire viewport height */
+            display: flex; /* Activates flexbox */
+            flex-direction: column; /* Makes the children (content) stack vertically */
+            justify-content: center; /* Centers content vertically */
+            align-items: center; /* Centers content horizontally */
+        }
+    </style>
+</head>
+<body>
+    <img style="display: block; margin: 0 auto; height: 300px;" src="{{ url_for('static', filename='img/dna.gif') }}" alt="DNA Image">
+    <h2>Wait 3-5 minutes, your result is still calculating.</h2>
+    <p>The page will automatically refresh every minute.</p>
+</body>
+</html>
