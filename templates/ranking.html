@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>MultiCens</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="static/img/favicon.ico" />
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/b20b121063.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+        integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <style>
+        .help {
+            /*background-image: url('static/img/manual.webp');*/
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: bottom;
+            border-left: 1px solid lightgrey;
+        }
+
+        ul li {
+            background-color: transparent !important;
+        }
+
+        .dataTables_filter {
+            margin-bottom: 10px;
+        }
+
+        table.dataTable thead th,
+        table.dataTable thead td {
+            padding: 6px !important;
+        }
+
+        table.dataTable thead th,
+        table.dataTable thead td,
+        table.dataTable tfoot th,
+        table.dataTable tfoot td {
+            text-align: center;
+        }
+
+        table.dataTable tbody th,
+        table.dataTable tbody td {
+            padding: 8px 8px;
+            text-overflow: ellipsis;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        td button {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: #dc3545;
+        }
+
+        .centered-image {
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid p-2 bg-primary text-white">
+        <div class="row">
+            <div class="col-md-1">
+                <img src="static/img/iitm.png" height="100px" alt="" />
+            </div>
+            <div class="col-md-11">
+                <h1>MultiCens</h1>
+                <p>
+                    Multilayer network centrality measures to uncover molecular
+                    mediators of tissue-tissue communication.
+                </p>
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-tabs m-4">
+      <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tab" href="#result"><i class="fa fa-home"></i> Result</a>
+      </li>
+  </ul>
+  <div id="result" style="margin-top: 20px; font-size: large" class="container-fluid p-5 text-center">
+    <div class="container mt-2">
+        <!-- <h2>Gene Ranking</h2> -->
+        <p style="display:inline-block; float:left;">Time taken {{time_taken}}</p>    
+        <div style="margin-bottom: 20px;">
+            <!-- Download link for the main result -->
+            <a style="float: right;" href="{{ url_for('download_file', filename=uniqueID + '.csv') }}" download>
+                <i class="fa fa-download"></i> Download Result
+            </a>
+        
+            <!-- Clear float -->
+            <div style="clear: both;"></div>
+        </div>
+        
+        
+        
+        
+        
+        <div>
+            <!-- The new table you provided -->
+            <table style="border-collapse: collapse; margin-bottom: 20px; border: 2px solid blue;">
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Unique ID</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{uniqueID}}</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Measure</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{measure}} Centrality</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Tissue</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{tNames}}</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Number of Samples</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{no_common_sample}} <a href="{{ url_for('download_csv', uniqueID=uniqueID, type='common_sample') }}" style="margin-right: 10px;">
+                        Download 
+                    </a></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Number of Genes</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{no_common_gene}} <a href="{{ url_for('download_csv', uniqueID=uniqueID, type='common_genes') }}">
+                        Download 
+                    </a></td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Submission Time</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{submissionTime}}</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px;">Expiration Time</td>
+                    <td style="border: 1px solid black; padding: 10px;">{{expirationTime}}</td>
+                </tr>
+            </table>
+        
+            <div class="table-container">
+                <table class="table" id="ranking">
+                    <thead class="table-dark">
+                        <tr>
+                            {% for column in columns %}
+                            <th>{{column}}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            {% for col in row %}
+                            <td>{{col}}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <script>
+                $(document).ready(function() {
+                    $('#ranking').DataTable({
+                        "pageLength": 10
+                    });
+                });
+            </script>
+            </body>
+            </html>

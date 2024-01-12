@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Result Expired</title>
+    <!-- This meta tag will refresh the page after 10 seconds and redirect to the home page -->
+    <meta http-equiv="refresh" content="10;url={{ url_for('index') }}" />
+    <style>
+        /* Center content on the page */
+        body {
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #f7f7f7; /* Optional: Adding a light background color */
+        }
+
+        h1 {
+            font-size: 8em; /* Increase the emoji size */
+            line-height: 1;
+            margin-bottom: 0.5em;
+        }
+
+        p {
+            font-size: 1.5em; /* Increase the font size for the paragraph */
+            color: #555; /* Optional: Change the text color to a soft grey */
+            margin: 0.5em 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>😢</h1>
+    <p>Your result has expired.</p>
+    <p>We will redirect you to the home page in 10 seconds...</p>
+</body>
+</html>
