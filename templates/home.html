@@ -69,106 +69,8 @@
         .centered-image {
             display: inline-block;
         }
-        /* Style for the blurred overlay */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-    z-index: 1;
-    display: none; /* Initially hidden */
-}
-
-#cookie-banner {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #333; /* Change the background color as needed */
-    color: #fff; /* Change the text color as needed */
-    padding: 15px;
-    text-align: center;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Optional: Add a box shadow for a subtle effect */
-    z-index: 2;
-    display: none; /* Initially hidden */
-}
-
-#cookie-banner p {
-    margin: 0;
-}
-
-#cookie-banner button {
-    background-color: #4CAF50; /* Change the button color as needed */
-    color: #fff; /* Change the button text color as needed */
-    padding: 10px 20px;
-    margin: 0 10px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px; /* Optional: Add rounded corners to the buttons */
-}
-
-#cookie-banner button:hover {
-    background-color: #45a049; /* Change the button color on hover as needed */
-}
 
     </style>
-    <script>
-        function setCookie(name, value, days) {
-            var expires = "";
-            if (days) {
-                var date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toUTCString();
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-    
-        function getCookie(name) {
-            var dc = document.cookie;
-            var prefix = name + "=";
-            var begin = dc.indexOf("; " + prefix);
-            if (begin == -1) {
-                begin = dc.indexOf(prefix);
-                if (begin != 0) return "";
-            } else {
-                begin += 2;
-            }
-            var end = document.cookie.indexOf(";", begin);
-            if (end == -1) {
-                end = dc.length;
-            }
-            return decodeURI(dc.substring(begin + prefix.length, end));
-        }
-    
-        function acceptCookies() {
-            setCookie("cookiesAccepted", "true", 365);
-            hideCookieBanner();
-        }
-    
-        function declineCookies() {
-            setCookie("cookiesAccepted", "false", 365);
-            hideCookieBanner();
-        }
-    
-        function showCookieBanner() {
-            var consent = getCookie("cookiesAccepted");
-            if (consent === "") {
-                document.getElementById('cookie-banner').style.display = 'block';
-                document.getElementById('overlay').style.display = 'block';
-                document.body.style.overflow = 'hidden'; // Disable scrolling when the banner is displayed
-            }
-        }
-    
-        function hideCookieBanner() {
-            document.getElementById('cookie-banner').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.body.style.overflow = 'auto'; // Enable scrolling when the banner is hidden
-        }
-    
-        window.onload = showCookieBanner;
-    </script>
     
 </head>
 
@@ -197,6 +99,10 @@
             <a class="nav-link" data-bs-toggle="tab" href="#tool-beta"><i class="fa fa-screwdriver-wrench"></i> Tool
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#my-job"><i class="fa fa-search"></i> My Job
+            </a>
+        </li>
         <li class="nav-item"> <!-- New download tab -->
             <a class="nav-link" data-bs-toggle="tab" href="#download"><i class="fa fa-download"></i> Download</a>
         </li>
@@ -211,12 +117,6 @@
     <!-- Tab panes -->
     <div class="tab-content mb-5">
         <div class="tab-pane container active" id="home">
-            <div id="overlay" class="overlay"></div>
-            <div id="cookie-banner" class="cookie-banner">
-                <p>This website uses cookies to ensure you get the best experience on our website.</p>
-                <button onclick="acceptCookies()">Accept</button>
-                <button onclick="declineCookies()">Decline</button>
-            </div>
             
             <div class="card mt-3 mb-3">
                 <h5 class="card-header">About</h5>
@@ -446,6 +346,7 @@
             <div class="row">
                 <div class="col-sm-9">
                     <div class="container ps-5 pe-5 mt-5">
+
                         <button type="button" class="btn btn-outline-primary mb-4" id="examplelocal">Example Run-Local</button>
                         <button type="button" class="btn btn-outline-primary mb-4" id="exampleglobal">Example Run-Global</button>
                         <button type="button" class="btn btn-outline-primary mb-4" id="examplequeryset">Example Run-QuerySet</button>
@@ -676,12 +577,12 @@
                         <h6><i class="fa fa-download"></i> Sample files used for <strong>Example Run</strong></h6>
                         <ul class="list-group list-group-flush bg-transparent">
                             <li class="list-group-item">
-                                <a href="static/downloads/Pancreas.zip" download><i class="fa fa-download"></i>
+                                <a href="{{ url_for('download_file', filename='Pancreas.v8.normalized_expression.bed.gz') }}" download><i class="fa fa-download"></i>
                                     Pancreas.zip</a> (Compressed csv file containing gene expression data for Pancreas
                                 Tissue)
                             </li>
                             <li class="list-group-item">
-                                <a href="static/downloads/Pancreas.zip" download><i class="fa fa-download"></i>
+                                <a href="{{ url_for('download_file', filename='Muscle_Skeletal.v8.normalized_expression.bed.gz') }}" download><i class="fa fa-download"></i>
                                     Muscle.zip</a> (Compressed csv file containing gene expression data for Muscle
                                 Tissue)
                             </li>
@@ -690,6 +591,65 @@
                 </div>
             </div>
         </div>
+
+            <div style="margin-top: 50px;" class="tab-pane container fade" id="my-job">
+                <!-- Heading -->
+                <h3 class="text-center mb-3" style="text-decoration: underline;">Retrieve the Result</h3>
+
+                <!-- Examples of Unique IDs -->
+                <small class="form-text text-muted">
+                    Example UniqueID: <br>
+                    - Local: 20231219185607 <br>
+                    - Global: 20240410131556 <br>
+                    - Query Set: 20231219225259
+                </small>
+                <br>
+
+                <br>
+        
+                <!-- Input field for Unique ID -->
+                <input type="text" class="form-control" id="uniqueID" placeholder="Search by ID...">
+        
+                <br>
+        
+                <!-- Search and Reset Buttons -->
+                <button class="btn btn-outline-secondary" type="button" id="searchButton">Search</button>
+                <button class="btn btn-outline-danger" type="button" id="resetButton">Reset</button>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+
+                <script>
+                    $(document).ready(function() {
+                        // Search button functionality
+                        $("#searchButton").click(function() {
+                            var uniqueID = $("#uniqueID").val();
+                            var searchUrl = "/get_result/" + uniqueID;
+                            window.open(searchUrl, "_blank");
+                            // Clear the input field after search
+                            $("#uniqueID").val('');
+                        });
+        
+                        // Reset button functionality
+                        $("#resetButton").click(function() {
+                            // Clear the input field
+                            $("#uniqueID").val('');
+                        });
+                    });
+                </script>
+        </div>
+        
 
         <div class="tab-pane container fade" id="download">
             <h4 class="mt-3">Pre computed Result</h4>
@@ -923,12 +883,12 @@
                 <div class="card-body">
                     <ul class="list-group list-group-flush bg-transparent">
                         <li class="list-group-item">
-                            <a href="static/downloads/Pancreas.zip" download><i class="fa fa-download"></i>
+                            <a href="{{ url_for('download_file', filename='Pancreas.v8.normalized_expression.bed.gz') }}" download><i class="fa fa-download"></i>
                                 Pancreas.zip</a> (Compressed csv file containing gene expression data for Pancreas
                             Tissue)
                         </li>
                         <li class="list-group-item">
-                            <a href="static/downloads/Muscle.zip" download><i class="fa fa-download"></i>
+                            <a href="{{ url_for('download_file', filename='Muscle_Skeletal.v8.normalized_expression.bed.gz') }}" download><i class="fa fa-download"></i>
                                 Muscle.zip</a> (Compressed csv file containing gene expression data for Muscle
                             Tissue)
                         </li>
