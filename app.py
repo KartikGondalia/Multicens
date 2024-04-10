@@ -4,6 +4,7 @@ import time
 import datetime
 import uuid
 import sqlite3
+from util.hgnc import hgnc_code
 import json
 import shutil
 import io
@@ -114,36 +115,10 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)  # Session timeout of 1 hour
 session_id = ''
 
-
-
-# Session management
-@app.before_request
-def before_request():
-    check_session_expiry()
-
-def check_session_expiry():
-    if 'last_activity' in session:
-        last_activity_time = session['last_activity']
-        session_timeout = app.config['PERMANENT_SESSION_LIFETIME']
-        # Check if session has expired
-        if datetime.now(timezone.utc) - last_activity_time > session_timeout:            
-            shutil.rmtree(os.path.join('uploads', session_id))
-            file_path = os.path.join('downloads', session_id)
-            if os.path.exists(file_path):
-                os.remove(file_path)         
-            session.clear()
-
-    # Update last activity time
-    session['last_activity'] = datetime.now(timezone.utc)
     
 # Home page
 @app.route('/')
 def index():
-    cookies = request.cookies
-    print("Cookies:", cookies)
-    global session_id
-    session_id = str(uuid.uuid4().hex)
-    session['id'] = session_id
     return render_template('home.html', gtissue_list=gtissue_list,mtissue_list=mtissue_list, hormone_list=hormone_list, measures=measures, dataset_list=dataset_list)
 
 
@@ -423,6 +398,21 @@ def display_result(uniqueID):
 
     if not result_data:
         return "No result found for this uniqueID", 404
+    
+    
+    tNames = result_data[1]
+    submissionTime = result_data[2]
+    expirationTime = result_data[3]
+    path = result_data[4]
+    time_taken = result_data[5]
+    measure = result_data[6]
+    # Capitalize the first letter
+    measure = measure[0].upper() + measure[1:]
+    common_genes = json.loads(result_data[7]) if result_data[7] else []
+    common_sample = json.loads(result_data[8]) if result_data[8] else []
+    query_genes = json.loads(result_data[9]) if result_data[9] else []
+    no_common_sample = result_data[10]
+    no_common_gene = result_data[11]
 
     if result_data[0] is None:
         # Ensure the format string matches your database's format
@@ -442,33 +432,22 @@ def display_result(uniqueID):
             return "Error processing submission time", 400
 
         # Less than 4 hours have passed, continue waiting for the result
-        return render_template('waiting.html')
+        return render_template('waiting.html',tNames=tNames, uniqueID=uniqueID,
+                                submissionTime=submissionTime, expirationTime=expirationTime, 
+                                time_taken=time_taken,
+                                measure=measure)
     else:
         columns = ['Tissue Name', 'Gene Name', 'Centrality', 'Rank']
         result_list = json.loads(result_data[0])
-        tNames = result_data[1]
-        submissionTime = result_data[2]
-        expirationTime = result_data[3]
-        path = result_data[4]
-        time_taken = result_data[5]
-        measure = result_data[6]
-        # Capitalize the first letter
-        measure = measure[0].upper() + measure[1:]
-
-        common_genes = json.loads(result_data[7]) if result_data[7] else []
-        common_sample = json.loads(result_data[8]) if result_data[8] else []
-        query_genes = json.loads(result_data[9]) if result_data[9] else []
-        no_common_sample = result_data[10]
-        no_common_gene = result_data[11]
+        
 
         return render_template('ranking.html', columns=columns, 
-                                rows=result_list, tNames=tNames, uniqueID=uniqueID,
+                                rows=result_list[:2000], tNames=tNames, uniqueID=uniqueID,
                                 submissionTime=submissionTime, expirationTime=expirationTime, 
                                 time_taken=time_taken, path=path,
                                 measure=measure, common_genes=common_genes, 
                                 common_sample=common_sample, query_genes=query_genes, 
-                                no_common_sample=no_common_sample, no_common_gene=no_common_gene)
-
+                                no_common_sample=no_common_sample, no_common_gene=no_common_gene, hgnc_code=hgnc_code)
 
 
 
@@ -649,18 +628,54 @@ def get_centrality():
         #print(result_csv)
 
         update_result_in_db(uniqueID, result, time_taken, result_csv)
+
+        if email:
+            table = pd.DataFrame({
+                'Unique ID': uniqueID,
+                'URL': url,
+                'Submission time': submissionTime,
+                'Expiration time': expirationTime,
+                'Tissue name': tNames,
+                'Measure name': measure
+            }, index=[0])
+
+            table_html = table.to_html()
+
+            subject = "Multicens - Task Completed"
+
+            # Add your custom message
+            message = """
+            Hi, <br>
+
+            Your Job has been completed.<br>
+            <br>
+            {}<br><br>
+            
+            if you have any inquiries, please email us at birdslab.iitm@gmail.com <br>
+            <br>
+            Thanks, <br>
+            Birds Lab <br>
+            Department of Computer Science and Engineering <br>
+            IIT Madras, Chennai <br>
+            India - 600036 <br>
+            """.format(table_html)
+
+            send_email(email, subject, message)
+
         
                 
         return render_template(
     'ranking.html', 
     columns=result.columns, 
-    rows=list(result.values.tolist()), 
+    rows=list(result.values.tolist())[:2000],
     path=result_csv, 
     time_taken=time_taken,
     uniqueID=uniqueID,  # Added this
     tNames=tNames,      # Added this
     submissionTime=submissionTime,  # Added this
-    expirationTime=expirationTime   # Added this
+ 
+    expirationTime=expirationTime,   # Added this
+    hgnc_code=hgnc_code
 )
 
 
