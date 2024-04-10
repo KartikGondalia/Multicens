@@ -161,7 +161,7 @@
                     <thead class="table-dark">
                         <tr>
                             {% for column in columns %}
-                            <th>{{column}}</th>
+                            <th>{{ column }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
@@ -169,13 +169,26 @@
                         {% for row in rows %}
                         <tr>
                             {% for col in row %}
-                            <td>{{col}}</td>
+                            {% if loop.index0 == 1 %} {# Assuming gene name is at index 1 #}
+                            {% set gene_name = col %}
+                            {% if gene_name in hgnc_code %}
+                            <td><a href="https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/{{ hgnc_code[gene_name] }}" target="_blank">{{ gene_name }}</a></td>
+                            {% else %}
+                            <td>{{ gene_name }}</td>
+                            {% endif %}
+                            {% else %}
+                            <td>{{ col }}</td>
+                            {% endif %}
                             {% endfor %}
                         </tr>
+                        
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            
+            
+            
             
             <script>
                 $(document).ready(function() {
