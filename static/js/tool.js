@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       uniqueID = '20231219225259';
       path = "static/img/Example_Query.png";
     } else if (measureType === 'global') {
-      uniqueID = '20231219184936';
+      uniqueID = '20240410131556';
       path = "static/img/Example_Global.png";
     } else {
       uniqueID = '20231219185607';
@@ -306,7 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let gList = pData.data;
     let files = pData.files.map(f=>f.file);
 
-    console.log(files)
+
 
     const email = document.getElementById('email').value;
 
@@ -412,19 +412,24 @@ xhr.onload = function () {
   if (xhr.status === 200) {
       // Success: Set the response text in the new tab's body
       newTab.document.body.innerHTML = xhr.responseText;
-  } else if (xhr.status === 413) {
-      // Payload Too Large: Set a custom message or handle as needed
-      newTab.document.body.innerHTML = "The file is too large. Please upload a smaller file.";
-  } else {
-      // Other errors: Attempt to parse and display the error or a generic message
-      try {
-          let responseJson = JSON.parse(xhr.responseText);
-          newTab.document.body.innerHTML = responseJson.error || "An unknown error occurred. Please try again.";
-      } catch(e) {
-          newTab.document.body.innerHTML = "An error occurred. Please try again.";
-      }
-  }
+  // } else if (xhr.status === 413) {
+  //     // Payload Too Large: Set a custom message or handle as needed
+  //     newTab.document.body.innerHTML = "The file is too large. Please upload a smaller file.";
+  // } else {
+  //     // Other errors: Attempt to parse and display the error or a generic message
+  //     try {
+  //         let responseJson = JSON.parse(xhr.responseText);
+  //         newTab.document.body.innerHTML = responseJson.error || "An unknown error occurred. Please try again.";
+  //     } catch(e) {
+  //         // Set a generic error message and include the specific error message in the new tab's body
+  //         let errorMessage = "An error occurred. Please try again. Error details: " + e.toString();
+  //         newTab.document.body.innerHTML = errorMessage;
+  //         // Log the error to the console
+  //         console.error(e);
+  //     }
+   }
 };
+
 
 // Send the data.
 xhr.send(formData);
