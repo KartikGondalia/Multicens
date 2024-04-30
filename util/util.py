@@ -67,7 +67,6 @@ def remove_extra_ensembl_ids(tissue_df, HGNC_gene_mapping):
     merged_df = merged_df[merged_df["SYMBOL"].notnull()]
     symbols = merged_df["SYMBOL"]
     merged_df.drop(columns=["GENEID", "SYMBOL"], inplace=True)
-    #print("return get_tissue")
     return merged_df, symbols
 
 def add_column(tissue_incomplete, column_name):
@@ -81,47 +80,42 @@ def add_column(tissue_incomplete, column_name):
 
 # Read gene expression data for a particular tssiue from GTex data
 def get_tissue(tissue):
-  
+
     # Read gene expression data for a tissue from GTex data
     try:
+
         if tissue["dataset"] == "GTex" or tissue["dataset"] == "MSBB":
-            #print(tissue["exp"])
+            
             tissue_df = pd.read_csv(tissue["exp"], sep="\t", compression="gzip", header="infer", skipinitialspace=True)
-            #print(tissue_df)
 
                         
-        else:
-            
+        elif ".bed" in tissue["exp"]:
             tissue_df = pd.read_csv(tissue["exp"], delimiter='\t')
+
+        else:            
+            tissue_df = pd.read_csv(tissue["exp"])
     except FileNotFoundError:
         
         print("Tissue file not found")
         return None
     
     
-    #print("Hi")
-    #print(tissue_df.columns)
+
     if "Ensembl ID" in tissue_df.columns:
-        #print("a")
         tissue_df["gene_id"] = tissue_df["Ensembl ID"]
 # Check if "gene_id" is a column in the DataFrame
     else:
-        #print("b")
         tissue_df["gene_id"] = tissue_df["gene_id"].str[:15]
-    #print(tissue_df["gene_id"] )
+    
     ensembl_gene_list = tissue_df["gene_id"]
-    #print("Im reached")
-    # Map GENEID to SYMBOL
-    #print("get_gene_names")
+
     HGNC_gene_mapping = get_gene_names(ensembl_gene_list)
     # Remove extra ensembl ids for which there is no SYMBOL
     
-    #print("remove_extra_ensembl_ids")
     tissue_df, headers = remove_extra_ensembl_ids(tissue_df, HGNC_gene_mapping)
     
     gene_tpm = tissue_df.iloc[:, 5:].T
     gene_tpm.columns = headers
-    #print("return create_corr_matrix")
     return gene_tpm
 
 # Remove the effect of co-variates
@@ -165,22 +159,13 @@ def rm_cov_effect(tissue_name, gene_tpm, cov_path):
 
 # Create correlation matrix
 def create_corr_matrix(uniqueID,tissue_list):
-
-    #print("Ba")
-    #print(tissue_list)
     
     start_time = time.time()
-    #print("B0")
     n = len(tissue_list)
-    #print("Ba1")
     tissue_names = "_".join(sorted([t["name"] for t in tissue_list]))
-    #print("Ba2")
     output_path = os.path.join("uploads", uniqueID)
-    #print("Ba3")
     corr_file_path = os.path.join(output_path, f"{tissue_names}.csv")
-    #print("Bali")
     if os.path.exists(corr_file_path):
-        #print("Balida")
         print("\n[Correlation matrix for selected tissues already exists.]")
         print("\n[Loading correlation matrix...]")
         correlation_matrix = pd.read_csv(corr_file_path)
@@ -189,7 +174,6 @@ def create_corr_matrix(uniqueID,tissue_list):
         with open(os.path.join(output_path, f"{tissue_names}.json"), 'r') as file:
             gene_count = json.loads(file.read())
     else:  
-        #print("Balida")
        
 
         tissues, sample_ids, genes = [], [], []
@@ -202,11 +186,7 @@ def create_corr_matrix(uniqueID,tissue_list):
             tissue = get_tissue(tissue_list[i])  # Assuming get_tissue is a function that returns a DataFrame
             print('noget')
             tissues.append(tissue)
-            #print(tissue.index)
             sample_ids.append(set(tissue.index))  # Assuming tissue.index contains the sample IDs
-            #print("Hii")
-            #print(sample_ids)
-            #print(len(sample_ids))
             genes.append(set(tissue.columns))  # Assuming tissue.columns contains the gene names
 
         # Finding the common elements in sample_ids and genes
@@ -214,10 +194,6 @@ def create_corr_matrix(uniqueID,tissue_list):
         if 'gene_id' in common_samples:
             common_samples.remove('gene_id')
 
-        #print(tissue.columns)
-
-        print("Target sample")
-        #print(common_samples)
 
         common_genes = list(set.intersection(*genes))
         no_common_sample = len(common_samples)
@@ -234,14 +210,10 @@ def create_corr_matrix(uniqueID,tissue_list):
         for i in tqdm(range(n), total=n, desc="Tissues Processed: ", unit=" Tissue(s)"):
           
             tissues[i] = tissues[i].loc[common_samples]
-            #print(tissues[i])
             tissues[i] = tissues[i].loc[:, ~tissues[i].columns.duplicated()]
-            #print(tissues[i])
             # Select common genes
             tissues[i] = tissues[i][common_genes]
-            #print("Jay")
             print(tissues[i])
-            #print("Vijay")
 
             # Convert all columns to numeric
             tissues[i] = tissues[i].apply(pd.to_numeric, errors='coerce')
@@ -263,9 +235,6 @@ def create_corr_matrix(uniqueID,tissue_list):
                 # Get the corresponding sorted columns
                 sorted_columns = numeric_columns.columns[sorted_indices]
 
-                #print("Jay1")
-                #print(sorted_columns)
-                #print("Vijay1")
                 most_var_genes.update(sorted_columns)
             else:
                 print("No numeric columns for variance calculation.")
@@ -300,16 +269,12 @@ def create_corr_matrix(uniqueID,tissue_list):
             # Select the union of (5000 most varying genes from each tissue) for each tissue
             tissues[i] = tissues[i][most_var_genes]
             gene_count.append(len(tissues[i].columns))
-            #print("Hello Kartik")
-            #print(gene_count)
            
             if tissue_list[i]["dataset"] == "GTex":
                 tissues[i] = rm_cov_effect(
                     tissue_list[i]["name"].capitalize(), tissues[i], tissue_list[i]["cov"]
                 )
             tissues[i].columns = [f"{gene}.{i+1}" for gene in tissues[i].columns]
-            #print("Kartik")
-            #print(tissues[i].columns)
         
         # Time calculation
         end_time = time.time()
