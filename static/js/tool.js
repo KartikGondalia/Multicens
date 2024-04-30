@@ -24,6 +24,26 @@ document.addEventListener("DOMContentLoaded", () => {
   var query_tissue = document.getElementById('query-tissue');
   var query_file = document.getElementById('query-file');
 
+  // Handle gene type selection
+  const topkgene = document.getElementById("topkgene");
+  const specifiedgene = document.getElementById("specifiedgene");
+  const topkgeneInput = document.getElementById("topkgeneInput");
+  const specifiedgeneInput = document.getElementById("specifiedgeneInput");
+
+  topkgene.addEventListener('change', function() {
+      if (this.checked) {
+          topkgeneInput.style.display = 'block';
+          specifiedgeneInput.style.display = 'none';
+      }
+  });
+
+  specifiedgene.addEventListener('change', function() {
+      if (this.checked) {
+          specifiedgeneInput.style.display = 'block';
+          topkgeneInput.style.display = 'none';
+      }
+  });
+
   measure.addEventListener("change", function () {
     let help_content = "";
     switch (measure.value) {
@@ -309,6 +329,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     const email = document.getElementById('email').value;
+    console.log(email)
+
+    let geneType = document.querySelector('input[name="geneType"]:checked')?.value;
+let geneData;
+
+if (geneType === 'topkgene') {
+    // Convert input value to integer
+    geneData = parseInt(topkgeneInput.value);
+    // Ensure the value is a valid number
+    if (isNaN(geneData)) {
+        alert("Please enter a valid number for Top k Gene.");
+        return;
+    }
+} else if (geneType === 'specifiedgene') {
+    // Store as comma separated string
+    geneData = specifiedgeneInput.value.split(',').map(gene => gene.trim()).join(',');
+}
+
+// Only log geneData if it's defined
+if (typeof geneData !== 'undefined') {
+    console.log(geneData);
+}
+      
 
     if (gList.length <= 0) {
       $("#error").removeClass("d-none");
@@ -379,7 +422,8 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("expirationTime", expirationTime);
     formData.append("tNames", tNames);
     formData.append('tissues', JSON.stringify(gList));
-
+    formData.append("geneType", geneType);
+    formData.append("geneData", geneData);
 
 
     setTimeout(function() {
@@ -447,11 +491,26 @@ xhr.send(formData);
 
     const email = document.getElementById('email').value;
 
+    let geneType = document.querySelector('input[name="geneType"]:checked')?.value;
+        let geneData;
+        if (geneType === 'topkgene') {
+            // Convert input value to integer
+            geneData = parseInt(topkgeneInput.value);
+            // Ensure the value is a valid number
+            if (isNaN(geneData)) {
+                alert("Please enter a valid number for Top k Gene.");
+                return;
+            }
+        } else if (geneType === 'specifiedgene') {
+            // Store as comma separated string
+            geneData = specifiedgeneInput.value.split(',').map(gene => gene.trim()).join(',');
+        }
 
-    if (gList.length <= 0) {
-      $("#error").removeClass("d-none");
+
+    if (gList.length <= 1) {
+      $("#error1").removeClass("d-none");
       setTimeout(function () {
-        $("#error").addClass("d-none");
+        $("#error1").addClass("d-none");
       }, 5000);
       return;
     }
@@ -515,6 +574,8 @@ xhr.send(formData);
     formData.append("submissionTime", submissionTime);
     formData.append("expirationTime", expirationTime);
     formData.append("tNames", tNames);
+    formData.append("geneType", geneType);
+    formData.append("geneData", geneData);
 
     
     setTimeout(function() {
@@ -569,11 +630,26 @@ xhr.send(formData);
 
     const email = document.getElementById('email').value;
 
+    let geneType = document.querySelector('input[name="geneType"]:checked')?.value;
+        let geneData;
+        if (geneType === 'topkgene') {
+            // Convert input value to integer
+            geneData = parseInt(topkgeneInput.value);
+            // Ensure the value is a valid number
+            if (isNaN(geneData)) {
+                alert("Please enter a valid number for Top k Gene.");
+                return;
+            }
+        } else if (geneType === 'specifiedgene') {
+            // Store as comma separated string
+            geneData = specifiedgeneInput.value.split(',').map(gene => gene.trim()).join(',');
+        }
 
-    if (gList.length <= 0) {
-      $("#error").removeClass("d-none");
+
+    if (gList.length <= 1) {
+      $("#error1").removeClass("d-none");
       setTimeout(function () {
-        $("#error").addClass("d-none");
+        $("#error1").addClass("d-none");
       }, 5000);
       return;
     }
@@ -647,7 +723,10 @@ xhr.send(formData);
     formData.append("tissue-index", query_tissue.selectedIndex);
     formData.append("query-file", query_file.files[0]);
     formData.append('tissues', JSON.stringify(gList));
-
+    console.log(gList)
+    console.log(JSON.stringify(gList))
+    formData.append("geneType", geneType);
+    formData.append("geneData", geneData);
     
     setTimeout(function() {
       if (shouldReload) {
