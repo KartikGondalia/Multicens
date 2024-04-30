@@ -83,10 +83,14 @@
             <div class="col-md-11">
                 <h1>MultiCens</h1>
                 <p>
-                    Multilayer network centrality measures to uncover molecular
-                    mediators of tissue-tissue communication.
+                    Multilayer network centrality measures to uncover molecular mediators of tissue-tissue communication.
+                    <br>
+                    <h9 style="font-size: smaller;">
+                        (Methods/Website/Software Development Supported Generously by: DBT/Wellcome Trust India Alliance Grant IA/I/17/2/503323.)
+                    </h9>
                 </p>
             </div>
+            
         </div>
     </div>
 
@@ -107,12 +111,24 @@
             <a class="nav-link" data-bs-toggle="tab" href="#download"><i class="fa fa-download"></i> Download</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#tutorial"><i class="fa fa-address-book"></i> Tutorial</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#help"><i class="fa fa-circle-question"></i> Help</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" href="#contact"><i class="fa fa-address-book"></i> Contact</a>
         </li>
+        <!-- New FAQ tab -->
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#faq"><i class="fa fa-question-circle"></i> FAQ</a>
+        </li>
+        <!-- New API Documentation tab -->
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#api-docs"><i class="fa fa-code"></i> API Documentation</a>
+        </li>
     </ul>
+    
 
     <!-- Tab panes -->
     <div class="tab-content mb-5">
@@ -226,6 +242,17 @@
                         <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011022" target="_blank">
                         Kumar, Tarun, et al. "MultiCens: Multilayer network centrality measures to uncover molecular
                         mediators of tissue-tissue communication." PLOS Computational Biology 19.4 (2023): e1011022.
+                        </a>
+                    </p>
+                    
+                </div>
+            </div>
+
+            <div class="card mt-3 mb-3">
+                <h5 class="card-header">Acknowledgement</h5>
+                <div class="card-body">
+                    <p>
+                        Methods/Website/Software Development Supported Generously by: DBT/Wellcome Trust India Alliance Grant IA/I/17/2/503323.
                         </a>
                     </p>
                     
@@ -357,6 +384,9 @@
                         <div class="alert alert-primary d-none" id="error">
                             <strong>Required!</strong> Please select at least one Tissue to measure the centrality.
                         </div>
+                        <div class="alert alert-primary d-none" id="error1">
+                            <strong>Required!</strong> Please select at least two Tissue to measure the centrality.
+                        </div>
                         <div class="table-responsive mb-3" id="tableDiv">
                             <table class="table caption-top" id="global-table">
                                 <caption><strong>Tissue List</strong></caption>
@@ -460,6 +490,20 @@
                             populateTissueDatalist(lastSelectedDataset);
                         </script>
                         
+                        <div class="col-12 mt-3">
+                            <label for="geneType" class="form-label">Gene Selection (Optional)</label>
+                            <div>
+                                <input type="radio" id="topkgene" name="geneType" value="topkgene">
+                                <label for="topkgene">Top k Gene</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="specifiedgene" name="geneType" value="specifiedgene">
+                                <label for="specifiedgene">Specified Gene</label>
+                            </div>
+                            <input type="text" class="form-control" id="topkgeneInput" name="topkgeneInput" placeholder="Enter a number" style="display:none;">
+                            <input type="text" class="form-control" id="specifiedgeneInput" name="specifiedgeneInput" placeholder="Enter genes separated by commas" style="display:none;">
+                        </div>
+                        
                         
                         
                         
@@ -474,14 +518,15 @@
                             </select>
                         </div>
 
-                        <div class="col-12 mt-3">
-                            <label for="email" class="form-label">Email (Optional)</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" />
-                        </div>
+                       
                         
                         <!-- Local Centrality -->
                         <div class="row" id="local">
                             <form action="" enctype="multipart/form-data" method="post" id="form-local">
+                                <div class="col-12 mt-3">
+                                    <label for="email" class="form-label">Email (Optional)</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" />
+                                </div>
                                 <!-- <div class="mb-4">
                                     <label for="local-tissue" class="form-label">Select Tissue</label>
                                     <select class="form-select" id="local-tissue" name="local-tissue" required>
@@ -500,6 +545,10 @@
                         <!-- Global Centrality -->
                         <div class="row d-none" id="global">
                             <form action="" enctype="multipart/form-data" method="post" id="form-global">
+                                <div class="col-12 mt-3">
+                                    <label for="email" class="form-label">Email (Optional)</label>
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" />
+                                </div>
                                 <button id="submit" type="submit" class="btn btn-primary mt-2">
                                     Get Ranking
                                 </button>
@@ -525,6 +574,10 @@
                                             accept=".csv" required />
                                     </div>
                                 </div>
+                                 <div class="col-12 mt-3">
+                            <label for="email" class="form-label">Email (Optional)</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="example@example.com" />
+                        </div>
                                 <button id="submit" type="submit" class="btn btn-primary mt-2">
                                     Get Ranking
                                 </button>
@@ -635,7 +688,7 @@
                         // Search button functionality
                         $("#searchButton").click(function() {
                             var uniqueID = $("#uniqueID").val();
-                            var searchUrl = "/get_result/" + uniqueID;
+                            var searchUrl = "/search_result/" + uniqueID;
                             window.open(searchUrl, "_blank");
                             // Clear the input field after search
                             $("#uniqueID").val('');
@@ -774,6 +827,191 @@
             
         </div>
 
+        <div class="tab-content">
+            <div id="tutorial" class="container tab-pane fade"><br>
+                <h3>Tutorial</h3>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#documentation">Documentation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#videoTutorials">Video Tutorials</a>
+                    </li>
+                </ul>
+        
+                <div class="tab-content">
+                    <div id="documentation" class="tab-pane fade show active"><br>
+                        <div class="accordion" id="documentationAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingIntro">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIntro" aria-expanded="true" aria-controls="collapseIntro">
+                                        Introduction to MultiCens
+                                    </button>
+                                </h2>
+                                <div id="collapseIntro" class="accordion-collapse collapse show" aria-labelledby="headingIntro" data-bs-parent="#documentationAccordion">
+                                    <div class="accordion-body">
+                                        <!-- Introduction content goes here -->
+                                        <p>Interactions among biomolecules such as genes are crucial to a biological system, and a network of such interactions among genes residing in different tissues or regions within the body is called a multilayer network. Given that proper communication among different organs and tissues is essential for the healthy functioning of our body, and complex diseases often affect multiple organs or tissues, there is growing interest in constructing network models of genes residing in different tissues from multi-tissue genomic data. However, a major challenge lies in analyzing and extracting biological insights from such multi-tissue or multilayer network models. MultiCens offers a way to quantify the importance (also known as centrality) of genes (also known as nodes) within a multilayer network. MultiCens stands out as a robust tool designed to delve into the centrality of genes within intricate multilayer networks, particularly focusing on inter-tissue communication. It provides valuable insights into the local, global, and query-set centrality characteristics of genes, leveraging gene expression data for comprehensive analysis. With its capabilities, MultiCens empowers users to gain a deeper understanding of gene centrality dynamics across diverse biological contexts, aiding in the elucidation of complex biological processes and interactions.</p>
+                                        <p><strong>Note:</strong> For further details, please refer to our recently published paper:
+                                        <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011022" target="_blank">Kumar T, Sethuraman R, Mitra S, Ravindran B, Narayanan M. MultiCens: Multilayer network centrality measures to uncover molecular mediators of tissue-tissue communication. PLoS Comput Biol. 2023 Apr 24;19(4):e1011022. doi: 10.1371/journal.pcbi.1011022. PMID: 37093889; PMCID: PMC10159362.</a></p>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingConcepts">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseConcepts" aria-expanded="false" aria-controls="collapseConcepts">
+                                        Foundational Concepts: Essential Insights
+                                    </button>
+                                </h2>
+                                <div id="collapseConcepts" class="accordion-collapse collapse" aria-labelledby="headingConcepts" data-bs-parent="#documentationAccordion">
+                                    <div class="accordion-body">
+                                        <p><strong>What is centrality measure?</strong> <br> A centrality measure quantifies the importance of nodes within a network, originating from social network analysis and now pivotal in network science across various disciplines. Notable examples include PageRank, which ranks web pages based on their relative importance using the hyperlink structure of the World Wide Web. Centrality measures initially devised for single networks have found broad applications in social, technological, and biological networks. In multilayer networks, these measures can be expanded in diverse ways. Ignoring multilayer structures can yield different ranking outcomes compared to those obtained for multilayer networks, underscoring the significance of considering such structures. To address this, we model multi-tissue data as a multilayer network and propose a tailored set of centrality measures (local, global, and query set) suitable for the multilayer context.</p>
+                                        <p><strong>What is local centrality?</strong> <br> In this mode, MultiCens assesses how a node, representing a gene, influences other nodes within the same layer, such as a tissue or a specific region. Local centrality quantifies the impact of a gene on its neighboring genes within a given layer.</p>
+                                        <p><strong>What is global centrality?</strong> <br> Unlike local centrality, which focuses solely on within-layer connections, global centrality measures a gene's influence across all nodes in the entire network, disregarding their specific layers. This mode provides a broader perspective on a gene's overall impact within the multilayer network.</p>
+                                        <p><strong>What is query set centrality?</strong> <br> The query-set centrality mode evaluates how a gene affects a specific set of nodes within any layer of the multilayer network. It quantifies a gene's influence on a predefined group of nodes, allowing for targeted analysis of its impact on a particular subset within the network.</p>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingGettingStarted1">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGettingStarted1" aria-expanded="false" aria-controls="collapseGettingStarted1">
+                                        MultiCens Getting Started / Demos
+                                    </button>
+                                </h2>
+                                <div id="collapseGettingStarted1" class="accordion-collapse collapse" aria-labelledby="headingGettingStarted1" data-bs-parent="#documentationAccordion">
+                                    <div class="accordion-body">
+                                        <p><strong>Exploring MultiCens: Example Runs in the Tool Tab</strong> <br> Three examples have been incorporated as three tabs within the "Tool" section, allowing users to click and obtain an overview of how to utilize MultiCens.</p>
+                                        <img src="static/img/image1.png" class="card-img-top" alt="Photo" width="adjust" height="adjust">
+
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingGettingStarted2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGettingStarted2" aria-expanded="false" aria-controls="collapseGettingStarted2">
+                                        Running MultiCens via the Website Interface
+                                    </button>
+                                </h2>
+                                <div id="collapseGettingStarted2" class="accordion-collapse collapse" aria-labelledby="headingGettingStarted2" data-bs-parent="#documentationAccordion">
+                                    <div class="accordion-body">
+                                        <!-- Running MultiCens content goes here -->
+                                        <div>
+                                            <h3>How to Use/Run MultiCens</h3>
+                                            <p>The primary feature of MultiCens is its "Tool" tab. To assess MultiCens' functionality, users must initially choose a dataset and then select tissue names. A minimum of two tissue names is required for testing purposes.
+                                            </p>
+                                            <ol>
+                                                <li>
+                                                    <strong>Selecting the Dataset for Tissue List:</strong>
+                                                    <p>In the MultiCens webserver, gene expression matrices from two known databases (GTex and MSBB) are already uploaded. Other than that, users can upload their own data.
+                                                        <ul>
+                                                            <li><a href="https://gtexportal.org/home/tissueSummaryPage" target="_blank">GTex Tissue Summary Page</a></li>
+                                                            <li><a href="https://adknowledgeportal.synapse.org/Explore/Studies/DetailsPage/StudyDetails?Study=syn3159438#Methods-GeneExpressionRNAseq" target="_blank">MSBB Gene Expression Studies</a> <br> (We have signed data usage certificate, to download data from AMP-AD knowledge portal.)</li>
+                                                        </ul>
+                                                    </p>
+                                                    <img src="static/img/image2.png" class="card-img-top" alt="Photo" />
+                                                </li>
+                                                <li>
+                                                    <strong>Selecting the Tissue Name:</strong>
+                                                    <p>Once the dataset is selected, you must choose the tissue names from the provided list. For GTex and MSBB, this will be a selection from preloaded options. For other datasets, you will need to manually enter the tissue names.</p>
+                                                    <img src="static/img/image3.png" class="card-img-top" alt="Photo" />
+                                                    <img src="static/img/image4.png" class="card-img-top" alt="Photo" />
+                                                </li>
+                                                <li>
+                                                    <strong>Selecting the Gene Expression Data File:</strong>
+                                                    <p>For GTex and MSBB, since gene expression matrices are preloaded, the “Choose file” option will remain inactive. Users after selecting, tissue name, should directly click “Add Tissue”. The Tissue Name will be added and displayed as shown in the screenshot.</p>
+                                                    <img src="static/img/image5.png" class="card-img-top" alt="Photo" />
+                                                    <p>When “Others” is selected under “Dataset”, “Choose file” option becomes active, and users must upload the gene expression data file and click on “Add Tissue”. The data file should be a compressed csv file (.zip or .gz). The maximum file size for each file can be 50 MB.</p>
+                                                    <img src="static/img/image6.png" class="card-img-top" alt="Photo" />
+                                                </li>
+                                                <li>
+                                                    <strong>Choosing the Centrality Measure:</strong>
+                                                    <p>After tissue name is selected, user needs to select the centrality measures. Users can select local, global or query set centrality. </p>
+                                                    <img src="static/img/image7.png" class="card-img-top" alt="Photo" />
+                                                    <p>To assess the centrality of a designated gene set (referred to as the query set) associated with a particular biological function or pathway across various layers such as tissues or regions, users can utilize the query set centrality feature. Users are required to upload the query set, which should be formatted in CSV (comma-separated values) format. Additionally, users must specify the tissue name corresponding to the origin of the query set. This enables the tool to accurately analyze and evaluate the centrality of the specified gene set within the specified tissue context.</p>
+                                                </li>
+                                                <li>
+                                                    <strong>Utilizing MultiCens: Running the Tool:</strong>
+                                                    <p>Once all necessary inputs are chosen or uploaded, users simply need to click on the "Get Ranking" button to obtain the result. The tool generates gene rankings according to centrality scores.</p>
+                                                    <img src="static/img/image8.png" class="card-img-top" alt="Photo" />
+                                                </li>
+                                                <li>
+                                                    <strong>Availability of email option:</strong>
+                                                    <p>In cases where multiple tissues are involved, which might necessitate several minutes to hours for processing, users have the option to provide an email address. This enables the tool to send a URL containing the result to the user for convenient future reference.</p>
+                                                    <img src="static/img/image9.png" class="card-img-top" alt="Photo" />
+                                                    <p>Additionally, a weblink to the result is provided upon data submission, with data stored on the website for seven days. It is imperative for users to download results within this timeframe.</p>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingGettingStarted3">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGettingStarted3" aria-expanded="false" aria-controls="collapseGettingStarted3">
+                                        Viewing and interpreting MultiCens outputs and results
+                                    </button>
+                                </h2>
+                                <div id="collapseGettingStarted3" class="accordion-collapse collapse" aria-labelledby="headingGettingStarted3" data-bs-parent="#documentationAccordion">
+                                    <div class="accordion-body">
+                                        <!-- Viewing and interpreting outputs content goes here -->
+                                        <p><strong>Navigating the MultiCens Result Page</strong> <br>After the result is calculated it will be displayed as follow: </p>
+                                        <img src="static/img/image10.png" class="card-img-top" alt="Photo" />
+                                        <p>On the Result page, the time taken to complete the task will be prominently shown in the top left corner, while an option to download the result in Excel format will be conveniently placed in the top right corner. Following this, there will be two tables:</p>
+                                        <p>The first table records the tissue names and centrality measures provided as input, along with a unique ID for result retrieval within the specified time frame. Additionally, it highlights the number of common samples and genes shared between the given tissues. For instance, between Muscle and Pancreas, 261 common samples and 19,370 common genes are utilized for centrality and gene ranking calculations. Furthermore, the list of common samples and genes can also be downloaded.</p>
+                                        <p>The second table, initially displaying 10 entries, showcases the tissue name, gene name, centrality score, and gene ranking. Users have the flexibility to view up to 100 entries at a time, and the table can be sorted based on any of the headers. In total 2000 entries will be displayed on the website. The full list of result containing the top k varying genes by default, will be available for download.</p>
+                
+                                        <p><strong>Retrieving MultiCens Result using unique ID</strong></p>
+                                        <p>As mentioned above an unique id is generated for each run. This is can be used to retrieve the result for the next seven days from MultiCens website under the “My Job” tab. The id needs to be entered in the search box. A few example ids are also given. The Result page will open in a new tab.</p>
+                                        <img src="static/img/image11.png" class="card-img-top" alt="Photo" />
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingAnalysis">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAnalysis" aria-expanded="false" aria-controls="collapseAnalysis">
+                                        Deciphering MultiCens Results: Interpretation and Analysis
+                                    </button>
+                                </h2>
+                                <div id="collapseAnalysis" class="accordion-collapse collapse" aria-labelledby="headingAnalysis" data-bs-parent="#documentationAccordion">
+                                    <div class="accordion-body">
+                                        <!-- Advanced analysis content goes here -->
+                                        <p>Highlighting the practical application of MultiCens in understanding inter-tissue communication, we utilize the example of tissues involved in insulin production and insulin responsiveness. The pancreas assumes a pivotal role in insulin synthesis and release. Following a meal, when blood glucose levels elevate, specialized beta cells within the pancreas secrete insulin into the bloodstream. Acting as a molecular key, insulin facilitates cellular glucose absorption, thereby reducing blood sugar levels. Insulin acts on various tissues and organs in the body, influencing multiple physiological processes. Among its major targets of action, insulin promotes glucose uptake by muscle cells, facilitating energy production and glycogen storage, while also stimulating the uptake of glucose and promoting fat storage in adipose tissue. In the liver, insulin inhibits glucose production and promotes glycogen synthesis, thereby lowering blood glucose levels. Additionally, insulin plays a role in the brain, where it may regulate appetite and satiety, and in the heart, facilitating glucose uptake to support cardiac muscle function. Furthermore, insulin enhances glucose reabsorption by the kidneys and regulates blood flow in endothelial cells, contributing to overall cardiovascular health. These coordinated effects of insulin on various tissues and organs are essential for maintaining glucose metabolism, lipid metabolism, and overall energy balance in the body, highlighting its critical role in metabolic regulation.</p>
+                                        <p>As an illustration, we have examined the gene-gene network within the pancreas and muscle (local centrality), the inter-tissue relationship linking muscle and pancreas (global centrality), and the impact of insulin-related genes moving from pancreas to muscle (query set centrality). The connection between the pancreas and muscle (skeletal muscle) concerning insulin involves the synchronized regulation of insulin secretion by the pancreas and insulin responsiveness in muscle tissue, collectively maintaining glucose homeostasis in the body. Any disruption in pancreatic insulin secretion or muscle insulin response can disrupt this balance, leading to fluctuations in blood glucose levels and potentially contributing to conditions like diabetes mellitus.</p>
+                                        <p>First, we present the result table derived from the local centrality analysis. Additionally, we showcase a network visualization created using Cytoscape, delineating the top 25 genes based on rank, in each tissue, namely Muscle and Pancreas. This highlights how the resulting table can be further used for analysis.</p>
+                                        <img src="static/img/image13.png" class="card-img-top" alt="Photo" />
+                                        <img src="static/img/image14.png" class="card-img-top" alt="Photo" />
+                                        <p>In terms of local centrality measure calculation, the ATP1B1 gene (encoding the ATPase Na+/K+ transporting subunit beta 1) attains the highest centrality score, securing the top rank in muscle. Similarly, the gene NFKB2 (nuclear factor kappa B subunit 2) achieves the highest rank in the pancreas. Notably, in the pancreas, the ATP1B1 gene is ranked 155, while NFKB2 is ranked 2087 in muscle. However, when global centrality is calculated between muscle and pancreas, the centrality measure and rank of these two genes change. ATP1B1 remains among the top-ranked genes in muscle (rank 2), while NFKB2 in the pancreas is ranked 299.</p>
+                                        <img src="static/img/image15.png" class="card-img-top" alt="Photo" />
+                                        <p>The following list presents the top 10 ranked genes based on global centrality calculation:</p>
+                                        <img src="static/img/image16.png" class="card-img-top" alt="Photo" />
+                                        <p>It's intriguing to observe that the AHNAK gene, responsible for encoding the AHNAK nucleoprotein, holds the first rank in global centrality and the second rank in local centrality for muscle. This suggests a significant functional role for this gene in muscle physiology. Notably, among the top 10 genes in global centrality, only one gene, PLOD3 (ranked 5), originates from the pancreas, with the remainder originating from muscle tissue. Interestingly, PLOD3 (procollagen-lysine,2-oxoglutarate 5-dioxygenase 3) also maintains its fifth rank in the pancreas based on local centrality measurement.</p>
+                                        <p>Additionally, upon calculating query set centrality, the resulting outcome is as follows (displaying the top 10):</p>
+                                        <img src="static/img/image17.png" class="card-img-top" alt="Photo" />
+                                        <p>As indicated by the findings, all of the top 10 genes originate from the pancreas, which aligns with expectations given the placement of the query set in the pancreas. Moreover, none of the top 10 genes identified in the query set centrality measures coincide with those identified in the top 10 genes for local or global centrality measures. This observation underscores how inter-tissue communication, influenced by gene-gene networks, can vary depending on the physiological context.</p>
+                                        <p>Additionally, it is worth noting that for the same set of tissues, the time required to calculate the three centrality measures varies, with query set centrality requiring the least time and global centrality taking the longest. This relies on the complexities of the underlying multilayer network to calculate centrality scores. The timing also depends on the number of run queued in the system. Based on the load, the same set of tissues for same centrality measure may require different time to execute in different runs.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div id="videoTutorials" class="tab-pane fade"><br>
+                        <h4>Video Tutorials</h4>
+                        <p>Watch video tutorials for a step-by-step visual guide through the features and functionalities of MultiCens.</p>
+                        <a href="https://drive.google.com/file/d/1C3CfJKVl2YHi1GP9CA3GIgwwvqDOwBZb/view?usp=sharing" class="btn btn-primary">Watch Tutorials</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+
 
         <div class="tab-pane container fade" id="help">
             <h4>Tool</h4>
@@ -908,6 +1146,447 @@
                 </div>
             </div>
         </div>
+
+
+<div class="tab-content">
+    <div id="faq" class="container tab-pane fade"><br>
+        <h3>Frequently Asked Questions</h3>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingDataFormats">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDataFormats" aria-expanded="true" aria-controls="collapseDataFormats">
+                        What are the data formats for input files?
+                    </button>
+                </h2>
+                <div id="collapseDataFormats" class="accordion-collapse collapse show" aria-labelledby="headingDataFormats" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>The gene expression matrix uploaded by users should be a compressed CSV file (.zip or .gz). For query set centrality, users are required to upload the query set, which should be formatted in CSV (comma-separated values) format.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingExecutionTime">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExecutionTime" aria-expanded="false" aria-controls="collapseExecutionTime">
+                        How long does MultiCens take to execute each run?
+                    </button>
+                </h2>
+                <div id="collapseExecutionTime" class="accordion-collapse collapse" aria-labelledby="headingExecutionTime" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>It depends on the number of tissues and the centrality measure selected. For two tissues approximately MultiCens takes from 10 - 40 mins. However, email option is provided, so that users can later on retrieve the results either using the URL provided in the email.  Further “My Job” tab can be used to access the result using unique ID, given for each submission.</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingStorageDuration">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStorageDuration" aria-expanded="false" aria-controls="collapseStorageDuration">
+                        How long is the result stored on the website?
+                    </button>
+                </h2>
+                <div id="collapseStorageDuration" class="accordion-collapse collapse" aria-labelledby="headingStorageDuration" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>The data is stored for seven days. It can be accessed either using the link provided upon submission or the unique id.</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingCompatibility">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCompatibility" aria-expanded="false" aria-controls="collapseCompatibility">
+                        In which operating systems and web browsers MultiCens have been tested?
+                    </button>
+                </h2>
+                <div id="collapseCompatibility" class="accordion-collapse collapse" aria-labelledby="headingCompatibility" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>OS/Browser</th>
+                                    <th>Chrome</th>
+                                    <th>FireFox</th>
+                                    <th>Edge</th>
+                                    <th>Safari</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Windows</td>
+                                    <td>Yes</td>
+                                    <td>Yes</td>
+                                    <td>Yes</td>
+                                    <td>No</td>
+                                </tr>
+                                <tr>
+                                    <td>MacOS</td>
+                                    <td>Yes</td>
+                                    <td>Yes</td>
+                                    <td>No</td>
+                                    <td>Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>Linux</td>
+                                    <td>Yes</td>
+                                    <td>Yes</td>
+                                    <td>No</td>
+                                    <td>No</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingGitHub">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGitHub" aria-expanded="false" aria-controls="collapseGitHub">
+                        Is there a github page available for MultiCens?
+                    </button>
+                </h2>
+                <div id="collapseGitHub" class="accordion-collapse collapse" aria-labelledby="headingGitHub" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>Yes. The complete MultiCens source code is available on GitHub: <a href="https://github.com/KartikGondalia/Multicens" target="_blank">https://github.com/KartikGondalia/Multicens</a></p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingSpecies">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSpecies" aria-expanded="false" aria-controls="collapseSpecies">
+                        Can MultiCens be used on all species?
+                    </button>
+                </h2>
+                <div id="collapseSpecies" class="accordion-collapse collapse" aria-labelledby="headingSpecies" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>At present, we have only tested on humans. In the future, we intend to add data for other species.</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTroubleResults">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTroubleResults" aria-expanded="false" aria-controls="collapseTroubleResults">
+                        Having trouble finding your analysis results? Here’s what you can do:
+                    </button>
+                </h2>
+                <div id="collapseTroubleResults" class="accordion-collapse collapse" aria-labelledby="headingTroubleResults" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <ul>
+                            <li><strong>Resubmit Task:</strong> If the user cannot find the result or result has expired, then the user can resubmit the task.</li>
+                            <li><strong>Double-check Your Unique ID:</strong> Make sure the Unique ID you’re using is exactly the same as the one you received after submitting your analysis. A simple typo could be the reason you’re not seeing your results.</li>
+                            <li><strong>Consider Timing:</strong> Check the expiration date. Results will be available only for 7 days. Make sure you’re trying to access them before they expire. You can find the expiration date in the email we sent you after your submission or the page following submission.</li>
+                            <li><strong>Processing time:</strong> If your analysis is complex, it might still be processing. Use the status link provided to check the current status of your job.</li>
+                            <li><strong>Look for Error Messages:</strong> Error message will be displayed if anything goes wrong.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingErrorsWarnings">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseErrorsWarnings" aria-expanded="false" aria-controls="collapseErrorsWarnings">
+                        Errors and Warnings
+                    </button>
+                </h2>
+                <div id="collapseErrorsWarnings" class="accordion-collapse collapse" aria-labelledby="headingErrorsWarnings" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <h5>Errors</h5>
+                        <ul>
+                            <li><strong>“No result found for this unique ID”:</strong> We couldn’t find any results linked to the ID you entered. Make sure you typed the ID correctly. It should match exactly with the one we provided you after your submission.</li>
+                            <li><strong>“Database error”:</strong> We are having trouble accessing our data storage. Try again in a few minutes.</li>
+                            <li><strong>“File not found”:</strong> We couldn’t locate the file you’re looking for. Double-check the file name for any mistakes. Remember, files are only available for a certain period, so make sure it hasn’t expired.</li>
+                            <li><strong>“Your result calculation has exceeded the maximum time limit”:</strong> Your analysis took too long to complete and stopped automatically. You may use fewer numbers of tissues, or resubmit the request.</li>
+                        </ul>
+                        <h5>Warnings</h5>
+                        <ul>
+                            <li><strong>“Results are still processing”:</strong> Your request is still running; we haven’t finished crunching the numbers yet. Check back later. You can use the status link we provided to see if it’s done.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingLicense">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLicense" aria-expanded="false" aria-controls="collapseLicense">
+                        License Information
+                    </button>
+                </h2>
+                <div id="collapseLicense" class="accordion-collapse collapse" aria-labelledby="headingLicense" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>MultiCens is open for all users, both academic and non-academic free of charge. There is no login requirement. We appreciate if you share your excitement about our service with your colleagues and cite us when you have found our service useful.</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingDisclaimer">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisclaimer" aria-expanded="false" aria-controls="collapseDisclaimer">
+                        Disclaimer
+                    </button>
+                </h2>
+                <div id="collapseDisclaimer" class= "accordion-collapse collapse" aria-labelledby="headingDisclaimer" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        <p>This resource is intended purely for research purposes. It should not be used for emergencies or medical or professional advice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="tab-content">
+    <div id="api-docs" class="container tab-pane fade"><br>
+        <h3>API Documentation</h3>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#quickDocumentation">Quick Documentation</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#briefDocumentation">Brief Documentation</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="quickDocumentation" class="tab-pane fade"><br>
+                <!-- Quick Documentation content should go here -->
+            </div>
+
+            <div class="tab-content">
+                <div id="briefDocumentation" class="tab-pane fade show active"><br>
+                    <div class="accordion" id="apiDocumentationAccordion">
+                        <!-- Overview Section -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOverview">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOverview" aria-expanded="true" aria-controls="collapseOverview">
+                                    Overview
+                                </button>
+                            </h2>
+                            <div id="collapseOverview" class="accordion-collapse collapse show" aria-labelledby="headingOverview" data-bs-parent="#apiDocumentationAccordion">
+                                <div class="accordion-body">
+                                    <p>The Multicens Centrality Analysis API provides computational analysis of gene expression data to determine various centrality measures across different tissues. This service is essential for researchers and biologists aiming to identify central or key genes within a tissue dataset.</p>
+                                    <p><strong>Base URL:</strong> <code>https://www.birdslab.in</code></p>
+                                    <p><strong>Authentication:</strong> The API currently does not require authentication.</p>
+                                    <p><strong>HTTP Methods:</strong></p>
+                                    <ul>
+                                        <li><strong>POST:</strong> Used to submit data for processing to specified resources. This method is utilized for computing centrality measures.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Endpoint 1: POST /get_centrality -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingPostCentrality">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePostCentrality" aria-expanded="false" aria-controls="collapsePostCentrality">
+                                    POST /get_centrality
+                                </button>
+                            </h2>
+                            <div id="collapsePostCentrality" class="accordion-collapse collapse" aria-labelledby="headingPostCentrality" data-bs-parent="#apiDocumentationAccordion">
+                                <div class="accordion-body">
+                                    <p>This endpoint allows for the submission of gene expression data files along with metadata to compute local, global, or query-set centrality measures.</p>
+                                    <h6>Request Parameters:</h6>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Parameter</th>
+                                                <th>Type</th>
+                                                <th>Required</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>measure</td>
+                                                <td>string</td>
+                                                <td>Yes</td>
+                                                <td>The type of centrality measure to compute. Accepted values: local, global, query.</td>
+                                            </tr>
+                                            <tr>
+                                                <td>email</td>
+                                                <td>string</td>
+                                                <td>No</td>
+                                                <td>Optional. Email address for receiving job status notifications and links to the results.</td>
+                                            </tr>
+                                            <tr>
+                                                <td>dataset</td>
+                                                <td>string</td>
+                                                <td>Yes</td>
+                                                <td>Specifies the dataset used for analysis. Accepted values: GTEx, MSBB, or custom.</td>
+                                            </tr>
+                                            <tr>
+                                                <td>tissue</td>
+                                                <td>string</td>
+                                                <td>Yes</td>
+                                                <td>Specifies the tissue name involved in the analysis. Must be compatible with the selected dataset.</td>
+                                            </tr>
+                                            <tr>
+                                                <td>files</td>
+                                                <td>file</td>
+                                                <td>Yes</td>
+                                                <td>Gene expression data files in .zip or .gz format.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h6>Additional Parameters for Query Centrality:</h6>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Parameter</th>
+                                                <th>Type</th>
+                                                <th>Required</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>query_tissue</td>
+                                                <td>string</td>
+                                                <td>Yes</td>
+                                                <td>Specifies the tissue name from the previously selected tissues for performing the query analysis.</td>
+                                            </tr>
+                                            <tr>
+                                                <td>query_gene_file</td>
+                                                <td>file</td>
+                                                <td>Yes</td>
+                                                <td>A CSV file containing the list of genes to include in the query centrality calculation.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <h6>Example Request:</h6>
+                                    <pre><code>curl -X POST "https://www.birdslab.in/get_centrality" \
+    -H "Content-Type: multipart/form-data" \
+    -F "measure=local" \
+    -F "email=example@example.com" \
+    -F "dataset=GTex" \
+    -F "tissue=heart" \
+    -F "files=@heart_data.zip"</code></pre>
+                                    <h6>Response Format:</h6>
+                                    <h6>Success Response:</h6>
+                                    <pre><code>{
+      "message": "Result will be displayed. Check your email for results link or use your uniqueID to track the status.",
+      "uniqueID": "12345ABC",
+      "statusUrl": "https://www.birdslab.in/get_result/20240410131556"
+    }</code></pre>
+                                    <h6>Error Response:</h6>
+                                    <pre><code>{
+      "error": "Unable to process request due to missing files.",
+      "statusCode": 400
+    }</code></pre>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Endpoint 2: GET /get_result/<uniqueID> -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingGetResult">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGetResult" aria-expanded="false" aria-controls="collapseGetResult">
+                                    GET /get_result/&lt;uniqueID&gt;
+                                </button>
+                            </h2>
+                            <div id="collapseGetResult" class="accordion-collapse collapse" aria-labelledby="headingGetResult" data-bs-parent="#apiDocumentationAccordion">
+                                <div class="accordion-body">
+                                    <p>This endpoint retrieves the results of a centrality analysis job using a unique identifier provided at the time of job submission. The results include detailed centrality rankings for genes within specified tissues, if the analysis has been completed within the allowed time frame.</p>
+                                    <h6>URL Parameters:</h6>
+                                    <ul>
+                                        <li><strong>uniqueID</strong> (string): A unique identifier associated with a specific analysis job.</li>
+                                    </ul>
+                                    <h6>Detailed Workflow:</h6>
+                                    <ol>
+                                        <li><strong>Retrieval Process:</strong> Users enter a unique ID on the web interface, which triggers a request to this endpoint to fetch the corresponding analysis results.</li>
+                                        <li><strong>Error Handling:</strong> If the unique ID does not correspond to any existing record or if there are database connectivity issues, appropriate error messages are returned.</li>
+                                        <li><strong>Timeout Checks:</strong> Checks are performed to ensure the analysis results are retrieved within a valid time window post submission. If the results are not available due to processing delays or data expiry, specific error statuses are returned.</li>
+                                    </ol>
+                                    <h6>Request Example:</h6>
+                                    <pre><code>GET https://www.birdslab.in/get_result/20240410131556</code></pre>
+                                    <h6>Success Response:</h6>
+                                    <pre><code>{
+      "status": "Complete",
+      "results": "Link to download the analysis results."
+    }</code></pre>
+                                    <h6>Error Responses:</h6>
+                                    <ul>
+                                        <li><code>404 Not Found</code>: "No result found for this uniqueID"</li>
+                                        <li><code>500 Internal Server Error</code>: "Database error"</li>
+                                        <li><code>400 Bad Request</code>: "Your result calculation has exceeded the maximum time limit"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    
+
+    
+                        <!-- Endpoint 3: GET /download/<filename> -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingDownload">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDownload" aria-expanded="false" aria-controls="collapseDownload">
+                                    GET /download/&lt;filename&gt;
+                                </button>
+                            </h2>
+                            <div id="collapseDownload" class="accordion-collapse collapse" aria-labelledby="headingDownload" data-bs-parent="#apiDocumentationAccordion">
+
+                                <div class="accordion-body">
+                                    <p>This endpoint facilitates the downloading of pre-computed centrality results. It provides users with access to stored results based on various centrality measures computed on standard datasets such as GTEx.</p>
+                                    <h6>URL Parameters:</h6>
+                                    <ul>
+                                        <li><strong>filename</strong> (string): The name of the file to be downloaded. The filename should correspond to one of the pre-computed results available.</li>
+                                    </ul>
+                                    <h6>Functionality:</h6>
+                                    <p>This endpoint ensures that users can securely download pre-computed result files, which include detailed analyses of different tissues or combinations of tissues under various centrality measures.</p>
+                                    <h6>Response:</h6>
+                                    <ul>
+                                        <li><strong>Success:</strong> The file is sent as an HTTP response with a ‘Content-Disposition’ header to prompt the file download.</li>
+                                        <li><strong>Error Responses:</strong>
+                                            <ul>
+                                                <li><code>404 Not Found</code>: If the filename does not exist or is not available.</li>
+                                                <li><code>400 Bad Request</code>: If the filename is not secure or has been tampered with.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <h6>Example Request:</h6>
+                                    <pre><code>GET https://www.birdslab.in/download/example_results.csv</code></pre>
+                                    <h6>HTML Interface:</h6>
+                                    <p>The download functionality is accessed through the ‘/download’ tab on the main site. A table lists all available pre-computed result files. Each row provides details about the tissue/region name, centrality measure, dataset used, and a direct download link.</p>
+                                    <p>File Links are managed through <code>url_for('download_file', filename='filename.csv')</code>, where ‘filename’ is the name of the result file.</p>
+                                    <h6>Flask Backend Implementation:</h6>
+                                    <pre><code>@app.route('/download/&lt;filename&gt;', methods=['GET'])
+                                        def download_file(filename):
+                                        filename = secure_filename(filename)
+                                        filepath = os.path.join(app.root_path, 'static/sampleData', filename)
+                                        try:
+                                        return send_file(filepath, as_attachment=True)
+                                        except FileNotFoundError:
+                                        return "File not found", 404
+                                        except Exception as e:
+                                        return str(e), 500
+                                        </code></pre>
+                                        </div>
+                                        </div>
+                                        </div>
+                                                        <!-- Rate Limiting and Support -->
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingRateLimiting">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRateLimiting" aria-expanded="false" aria-controls="collapseRateLimiting">
+                            Rate Limiting and Support
+                        </button>
+                    </h2>
+                    <div id="collapseRateLimiting" class="accordion-collapse collapse" aria-labelledby="headingRateLimiting" data-bs-parent="#apiDocumentationAccordion">
+                        <div class="accordion-body">
+                            <p>The API is rate-limited to 5 requests per hour per IP to prevent abuse and ensure availability. Exceeding this limit results in a ‘429 Too Many Requests’ status code.</p>
+                            <p>For further assistance or to report issues, please contact <a href="mailto:birdslab.iitm@gmail.com">birdslab.iitm@gmail.com</a>. Our team is committed to ensuring a smooth and secure user experience.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+                               
+                                        
+
+
+
+
         <div class="tab-pane container fade" id="contact">
             <div class="row row-cols-1 row-cols-sm-4 g-4 mt-3">
                 <div class="col">

@@ -18,8 +18,38 @@
     </style>
 </head>
 <body>
-    <img style="display: block; margin: 0 auto; height: 300px;" src="{{ url_for('static', filename='img/dna.gif') }}" alt="DNA Image">
-    <h2>Please wait! It may take several minutes/hours ..., your result is still calculating.</h2>
-    <p>The page will automatically refresh every minute.</p>
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+        <table style="border-collapse: collapse; margin-bottom: 20px; border: 2px solid blue;">
+            <tr>
+                <td style="border: 1px solid black; padding: 10px;">Unique ID</td>
+                <td style="border: 1px solid black; padding: 10px;">{{ uniqueID }}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 10px;">URL</td>
+                <td style="border: 1px solid black; padding: 10px;">
+                    <a href="http://www.birdslab.in/get_result/{{ uniqueID }}">http://www.birdslab.in/get_result/{{ uniqueID }}</a>
+                </td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 10px;">Measure</td>
+                <td style="border: 1px solid black; padding: 10px;">{{ measure }} Centrality</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 10px;">Tissue</td>
+                <td style="border: 1px solid black; padding: 10px;">{{ tNames }}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 10px;">Submission Time</td>
+                <td style="border: 1px solid black; padding: 10px;">{{ submissionTime }}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black; padding: 10px;">Expiration Time</td>
+                <td style="border: 1px solid black; padding: 10px;">{{ expirationTime }}</td>
+            </tr>
+        </table>
+        <img style="display: block; margin: 0 auto; height: 300px;" src="{{ url_for('static', filename='img/dna.gif') }}" alt="DNA Image">
+        <h2>Please wait! It may take several minutes/hours..., your result is still calculating.</h2>
+        <p>The page will automatically refresh every minute.</p>
+    </div>
 </body>
 </html>
